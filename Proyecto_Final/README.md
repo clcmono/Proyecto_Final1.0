@@ -1,9 +1,9 @@
 ## INFORME
-![alt text](<Imagen de WhatsApp 2024-07-17 a las 17.51.55_53a835ea.jpg>)
-Carrera: Computación
-Materia: Estructura de Datos
-Integrantes: Valeria Mantilla y Claudia Quevedo
-correos: amantillac3@est.ups.edu.ec / cquevedor@est.ups.edu.ec
+![alt text](LOGO.jpg)
+- Carrera: Computación
+- Materia: Estructura de Datos
+- Integrantes: Valeria Mantilla y Claudia Quevedo
+- correos: amantillac3@est.ups.edu.ec / cquevedor@est.ups.edu.ec
 
 ## Descripción del problema
 
