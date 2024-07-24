@@ -3,6 +3,16 @@ package Modelo;
 import java.util.*;
 
 public class Laberinto {
+    private Celda inicio;
+    private Celda fin;
+
+    public void setInicio(Celda inicio) {
+        this.inicio = inicio;
+    }
+
+    public void setFin(Celda fin) {
+        this.fin = fin;
+    }
 
     //Método Recursivo Simple
     public List<Celda> findPathRecursive(boolean[][] grid) {

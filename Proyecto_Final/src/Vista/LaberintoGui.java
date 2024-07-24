@@ -1,4 +1,5 @@
 package Vista;
+
 import Modelo.Laberinto;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,7 +15,7 @@ public class LaberintoGui extends JFrame {
     private JTextField txtFinX;
     private JTextField txtFinY;
     private JTextField txtResultado;
-    public JTextField txtTiempo;
+    private JTextField txtTiempo;
     private JPanel laberintoPanel;
     private JButton[][] botones;
     private int altura;
@@ -22,7 +23,10 @@ public class LaberintoGui extends JFrame {
     private boolean[][] grid;
     private Laberinto laberinto;
     private JButton btnGenerar;
-    private JButton btnResolver;
+    private JButton btnRecursivo;
+    private JButton btnCache;
+    private JButton btnBFS;
+    private JButton btnDFS;
 
     public LaberintoGui() {
         setTitle("Laberinto");
@@ -114,11 +118,6 @@ public class LaberintoGui extends JFrame {
         topPanel.add(txtFinY, gbc);
         txtFinY.setColumns(5);
 
-        btnResolver = new JButton("Resolver Laberinto");
-        gbc.gridx = 4;
-        gbc.gridy = 2;
-        topPanel.add(btnResolver, gbc);
-
         contentPane.add(topPanel, BorderLayout.NORTH);
 
         // Panel donde se genera el laberinto
@@ -126,32 +125,54 @@ public class LaberintoGui extends JFrame {
         laberintoPanel.setLayout(new GridLayout());
         contentPane.add(laberintoPanel, BorderLayout.CENTER);
 
-        // Panel para resultados
+        // Panel para botones de resolución y resultados
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel lblResultado = new JLabel("Resultado:");
+        btnRecursivo = new JButton("Recursivo Simple");
         gbc.gridx = 0;
         gbc.gridy = 0;
+        bottomPanel.add(btnRecursivo, gbc);
+
+        btnCache = new JButton("Método Caché");
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        bottomPanel.add(btnCache, gbc);
+
+        btnBFS = new JButton("BFS");
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        bottomPanel.add(btnBFS, gbc);
+
+        btnDFS = new JButton("DFS");
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        bottomPanel.add(btnDFS, gbc);
+
+        JLabel lblResultado = new JLabel("Resultado:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         bottomPanel.add(lblResultado, gbc);
 
         txtResultado = new JTextField();
         txtResultado.setColumns(20);
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
         bottomPanel.add(txtResultado, gbc);
 
         JLabel lblTiempo = new JLabel("Tiempo:");
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         bottomPanel.add(lblTiempo, gbc);
 
         txtTiempo = new JTextField();
         txtTiempo.setColumns(20);
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
         bottomPanel.add(txtTiempo, gbc);
 
         contentPane.add(bottomPanel, BorderLayout.SOUTH);
@@ -161,8 +182,20 @@ public class LaberintoGui extends JFrame {
         btnGenerar.addActionListener(listener);
     }
 
-    public void addResolverLaberintoListener(ActionListener listener) {
-        btnResolver.addActionListener(listener);
+    public void addRecursivoListener(ActionListener listener) {
+        btnRecursivo.addActionListener(listener);
+    }
+
+    public void addCacheListener(ActionListener listener) {
+        btnCache.addActionListener(listener);
+    }
+
+    public void addBFSListener(ActionListener listener) {
+        btnBFS.addActionListener(listener);
+    }
+
+    public void addDFSListener(ActionListener listener) {
+        btnDFS.addActionListener(listener);
     }
 
     public int getAltura() throws NumberFormatException {
@@ -235,4 +268,10 @@ public class LaberintoGui extends JFrame {
     public void colorearCelda(int row, int col, Color color) {
         botones[row][col].setBackground(color);
     }
+    public void mostrarTiempo(String tiempo) {
+        txtTiempo.setText(tiempo);
+    }
+
+
+
 }
