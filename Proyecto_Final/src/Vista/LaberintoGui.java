@@ -1,5 +1,4 @@
 package Vista;
-import Modelo.Celda;
 import Modelo.Laberinto;
 import java.awt.*;
 import java.awt.event.*;
@@ -15,24 +14,15 @@ public class LaberintoGui extends JFrame {
     private JTextField txtFinX;
     private JTextField txtFinY;
     private JTextField txtResultado;
-    private JTextField txtTiempo;
+    public JTextField txtTiempo;
     private JPanel laberintoPanel;
     private JButton[][] botones;
     private int altura;
     private int anchura;
     private boolean[][] grid;
     private Laberinto laberinto;
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                LaberintoGui frame = new LaberintoGui();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    private JButton btnGenerar;
+    private JButton btnResolver;
 
     public LaberintoGui() {
         setTitle("Laberinto");
@@ -75,7 +65,7 @@ public class LaberintoGui extends JFrame {
         topPanel.add(txtAnchura, gbc);
         txtAnchura.setColumns(5);
 
-        JButton btnGenerar = new JButton("Generar Laberinto");
+        btnGenerar = new JButton("Generar Laberinto");
         gbc.gridx = 4;
         gbc.gridy = 0;
         topPanel.add(btnGenerar, gbc);
@@ -124,7 +114,7 @@ public class LaberintoGui extends JFrame {
         topPanel.add(txtFinY, gbc);
         txtFinY.setColumns(5);
 
-        JButton btnResolver = new JButton("Resolver Laberinto");
+        btnResolver = new JButton("Resolver Laberinto");
         gbc.gridx = 4;
         gbc.gridy = 2;
         topPanel.add(btnResolver, gbc);
@@ -165,15 +155,48 @@ public class LaberintoGui extends JFrame {
         bottomPanel.add(txtTiempo, gbc);
 
         contentPane.add(bottomPanel, BorderLayout.SOUTH);
+    }
 
-        btnGenerar.addActionListener(e -> generarLaberinto());
-        btnResolver.addActionListener(e -> resolverLaberinto());
+    public void addGenerarLaberintoListener(ActionListener listener) {
+        btnGenerar.addActionListener(listener);
+    }
+
+    public void addResolverLaberintoListener(ActionListener listener) {
+        btnResolver.addActionListener(listener);
+    }
+
+    public int getAltura() throws NumberFormatException {
+        return Integer.parseInt(txtAltura.getText());
+    }
+
+    public int getAnchura() throws NumberFormatException {
+        return Integer.parseInt(txtAnchura.getText());
+    }
+
+    public int getInicioX() throws NumberFormatException {
+        return Integer.parseInt(txtInicioX.getText());
+    }
+
+    public int getInicioY() throws NumberFormatException {
+        return Integer.parseInt(txtInicioY.getText());
+    }
+
+    public int getFinX() throws NumberFormatException {
+        return Integer.parseInt(txtFinX.getText());
+    }
+
+    public int getFinY() throws NumberFormatException {
+        return Integer.parseInt(txtFinY.getText());
+    }
+
+    public JButton[][] getBotones() {
+        return botones;
     }
 
     public void generarLaberinto() {
         try {
-            altura = Integer.parseInt(txtAltura.getText());
-            anchura = Integer.parseInt(txtAnchura.getText());
+            altura = getAltura();
+            anchura = getAnchura();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Por favor, ingrese números válidos para el alto y ancho.");
             return;
@@ -205,47 +228,11 @@ public class LaberintoGui extends JFrame {
         laberintoPanel.repaint();
     }
 
-    public void resolverLaberinto() {
-        try {
-            int inicioX = Integer.parseInt(txtInicioX.getText());
-            int inicioY = Integer.parseInt(txtInicioY.getText());
-            int finX = Integer.parseInt(txtFinX.getText());
-            int finY = Integer.parseInt(txtFinY.getText());
+    public void mostrarResultado(String resultado) {
+        txtResultado.setText(resultado);
+    }
 
-            if (inicioX < 0 || inicioX >= altura || inicioY < 0 || inicioY >= anchura ||
-                finX < 0 || finX >= altura || finY < 0 || finY >= anchura) {
-                JOptionPane.showMessageDialog(this, "Coordenadas fuera del rango del laberinto.");
-                return;
-            }
-
-            for (int i = 0; i < altura; i++) {
-                for (int j = 0; j < anchura; j++) {
-                    if (botones[i][j].getBackground() == Color.RED) {
-                        grid[i][j] = false;
-                    } else {
-                        grid[i][j] = true;
-                    }
-                }
-            }
-
-            laberinto = new Laberinto();
-            long startTime = System.currentTimeMillis();
-            List<Celda> path = laberinto.findPathDFS(grid); // Puedes cambiar a otros métodos de búsqueda
-            long endTime = System.currentTimeMillis();
-
-            if (path != null) {
-                for (Celda celda : path) {
-                    botones[celda.row][celda.col].setBackground(Color.GREEN);
-                }
-                txtResultado.setText("Camino encontrado");
-            } else {
-                txtResultado.setText("No hay camino posible");
-            }
-
-            txtTiempo.setText((endTime - startTime) + " ms");
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese números válidos para las coordenadas de inicio y fin.");
-        }
+    public void colorearCelda(int row, int col, Color color) {
+        botones[row][col].setBackground(color);
     }
 }
