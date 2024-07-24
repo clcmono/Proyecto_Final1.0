@@ -1,47 +1,34 @@
 package Modelo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class Laberinto {
+
     //Método Recursivo Simple
     public List<Celda> findPathRecursive(boolean[][] grid) {
         List<Celda> path = new ArrayList<>();
-        if(grid== null || grid.length == 0 || grid[0].length == 0){
+        if(grid == null || grid.length == 0 || grid[0].length == 0){
             return path;
         }
-        if(findPath(grid,0,0,path)){
+        if(findPath(grid, 0, 0, path)){
             return path;
         }
-        return null;// No retorna si no hay camino posible
+        return null;
     }
 
-    //Metodo creado para encontrar el camino
+    //Método creado para encontrar el camino
     private boolean findPath(boolean[][] grid, int row, int col, List<Celda> path) {
-        //Caso base: si estamos fuera de los limites o la celda no es transitable, devolvemos false
-        if(row >= grid.length || col >= grid[0].length || !grid [row][col]){
+        if(row >= grid.length || col >= grid[0].length || !grid[row][col]){
             return false;
         }
         Celda current = new Celda(row, col);
-        //Añadimos la celda actual al camino
         path.add(current);
-        //Llegamos a la esquina inferior derecha
         if (row == grid.length - 1 && col == grid[0].length - 1) {
             return true;
         }
-        //Método para moverse a la Derecha o hacia Abajo
-        if (findPath(grid, row, col + 1, path)|| findPath(grid, row + 1, col, path)) {
+        if (findPath(grid, row, col + 1, path) || findPath(grid, row + 1, col, path)) {
             return true;
         }
-        //Método para moverse a la Izquiera o hacia Arriba
-        if (findPath(grid, row, col - 1, path)|| findPath(grid, row - 1, col, path)) {
-            return true;
-        }
-        //Si no encontramos un camino, retrocedemos
         path.remove(path.size() - 1);
         return false;
     }
@@ -56,40 +43,36 @@ public class Laberinto {
         if (findPath(grid, 0, 0, path, cache)) {
             return path;
         }
-        return null; // No retorna si no hay camino posible
+        return null;
     }
+
     private boolean findPath(boolean[][] grid, int row, int col, List<Celda> path, Map<Celda, Boolean> cache) {
         if (row >= grid.length || col >= grid[0].length || !grid[row][col]) {
             return false;
         }
         Celda current = new Celda(row, col);
-
         if (cache.containsKey(current)) {
             return cache.get(current);
         }
-
         path.add(current);
-
         if (row == grid.length - 1 && col == grid[0].length - 1) {
             cache.put(current, true);
             return true;
         }
-
         boolean success = findPath(grid, row, col + 1, path, cache) || findPath(grid, row + 1, col, path, cache);
         if (success) {
             cache.put(current, true);
             return true;
         }
-
         path.remove(path.size() - 1);
         cache.put(current, false);
         return false;
     }
 
     //Método BFS - Búsqueda en Anchura
-    public List<Celda> findPathBFS(boolean[][] grid){
+    public List<Celda> findPathBFS(boolean[][] grid) {
         List<Celda> path = new ArrayList<>();
-        if(grid == null || grid.length == 0 || grid[0].length == 0){
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
             return path;
         }
         boolean[][] visited = new boolean[grid.length][grid[0].length];
@@ -99,15 +82,15 @@ public class Laberinto {
         queue.add(start);
 
         while (!queue.isEmpty()) {
-            List<Celda> currentPath = queue.poll(); 
-            Celda current = currentPath.get(currentPath.size()-1);
+            List<Celda> currentPath = queue.poll();
+            Celda current = currentPath.get(currentPath.size() - 1);
 
             if (current.row == grid.length - 1 && current.col == grid[0].length - 1) {
                 return currentPath;
             }
 
             for (Celda neighbor : getNeighbors(current, grid)) {
-                if (!visited[neighbor.row][neighbor.col]) { 
+                if (!visited[neighbor.row][neighbor.col]) {
                     visited[neighbor.row][neighbor.col] = true;
                     List<Celda> newPath = new ArrayList<>(currentPath);
                     newPath.add(neighbor);
@@ -115,7 +98,7 @@ public class Laberinto {
                 }
             }
         }
-        return null; // No retorna si no hay camino posible
+        return null;
     }
 
     private List<Celda> getNeighbors(Celda current, boolean[][] grid) {
@@ -131,20 +114,19 @@ public class Laberinto {
             }
         }
         return neighbors;
-        
     }
 
     //Método DFS - Búsqueda en Profundidad
-    public List<Celda> findPathDFS(boolean[][] grid){
-        List<Celda> path = new ArrayList<>(); 
-        if(grid == null || grid.length == 0 || grid[0].length == 0){
+    public List<Celda> findPathDFS(boolean[][] grid) {
+        List<Celda> path = new ArrayList<>();
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
             return path;
         }
         boolean[][] visited = new boolean[grid.length][grid[0].length];
         if (findPathDFSUtil(grid, 0, 0, path, visited)) {
             return path;
         }
-        return null; // No retorna si no hay camino posible
+        return null;
     }
 
     private boolean findPathDFSUtil(boolean[][] grid, int row, int col, List<Celda> path, boolean[][] visited) {
@@ -159,13 +141,11 @@ public class Laberinto {
             return true;
         }
 
-        if (findPathDFSUtil(grid, row + 1, col, path, visited) || findPathDFSUtil(grid, row, col + 1, path, visited) ||
-         findPathDFSUtil(grid, row, col - 1, path, visited) || findPathDFSUtil(grid, row - 1, col, path, visited)) {
+        if (findPathDFSUtil(grid, row + 1, col, path, visited) || findPathDFSUtil(grid, row, col + 1, path, visited)) {
             return true;
         }
 
         path.remove(path.size() - 1);
         return false;
     }
-    
 }
